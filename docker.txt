@@ -1,0 +1,126 @@
+                        #*** Running ubuntu image in container ***
+
+FROM ubuntu:latest
+
+#docker run -it ubuntu
+#this command help to create container which have ubuntu operating system in it
+#hub.docker.com help to create container, and this is like github, it has all public container if you already have ubuntu img then it reuses
+
+
+
+
+
+                        #*** Understanding imgaes vs containers ***
+
+#This container have particular id and it is isolated, imgs are operating systems, container needs imgs i.e os
+#img act as os and containers helps to run imgs  
+#containers cannot communicate with each other they are isolated, until and unless our wish
+
+#ctrl + d = stop container
+
+#we can make custom imgs,  that will have their own dependencies
+#these imgs can deploy on public platforms so any one can run this img in their local containers
+
+#docker container ls
+#it gives list of container which are running, this command works when your containers are running
+
+#docker container ls -a 
+#it gives list of all containers which are stooped and which are working
+
+#docker start container name = to start 
+
+#docker start container name = to start
+
+#docker 
+#how to go inside of container 
+#docker exec -it container_name command
+
+#-it = interactive tdy, it hepls to connect terminal to docker terminal so that you can perform commands in container
+
+#for eg. 
+#docker exec -it container_name bash
+
+#to see the imgs we can do
+#docker images
+#docker images ls
+
+#there are lots of imgs, we can explore that through docker.hub.com
+
+#if you want to go inside of container, you need to start it then go inside of it
+
+#we need to pull node 
+#command = docker run -it node
+
+
+#local machine have different node version and container have diff version
+
+
+
+
+
+                                        #*** Port Mapping ***
+
+#MailHog:-
+#MailHog is a tool used for email testing during development. In the context of Docker, MailHog can be run as a Docker container to capture and display emails sent by your application during testing or development. mailhog is img that can be used to send the mails
+
+#docker run -d -p 1025:1025 -p 8025:8025 mailhog/mailhog
+
+
+#within each container there will be a port and that port need to expose 
+
+#mailhog will run on 1025 port 
+# -p 1025:1025: This maps port 1025 on the host machine to port 1025 inside the MailHog container. Port 1025 is commonly used for receiving mail in development environments.
+# -p 8025:8025: This maps port 8025 on the host machine to port 8025 inside the MailHog container. Port 8025 is used for the MailHog web interface, allowing you to view and interact with the emails sent to MailHog.
+
+# So, these two mappings allow you to access the SMTP server of MailHog on port 1025 and the web interface on port 8025 from your host machine. 
+
+
+
+#piyushgargdev/mynodeapp this is an img and need to pull
+#docker run -it piyushgargdev/mynodeapp
+
+#docker run -it -p 6000:9000 piyushgargdev/mynodeapp
+#in above command  we are porting our localmachine port with container port
+
+#6000 = local machine port
+#we can change it
+
+#9000 = container port
+
+
+
+                                # *** ENVIRONMENT VARIABLES ***
+
+#In Docker, the ENV instruction is used to set environment variables in the image. Environment variables are key-value pairs that can be accessed by processes running inside the container. They are often used to configure applications or provide runtime information. If you want to give extra information to the container then we can use env variables, env are safe and secure
+
+#ENV key=value
+
+
+# COMMAND
+# docker run -it -e key = value img name
+
+docker run -it -e PORT=4000 -p 4000:3000 notes-nodejs
+
+
+
+
+1) need to start container
+>docker start 1stDNodejs
+
+2)go inside of container
+docker exec -it 1stDNodejs bash
+docker run -it 1stDNodejs 
+
+another way to go inside of container
+docker exec -it container_id bash
+
+
+3)run image
+docker run -it notes-nodejs
+
+when I usually do port mapping then we do in local terminal not inside of container, bcz I found that command tough 
+
+
+command to push your img to docker hub.com
+docker push img name
+for that you need to login docker in local machine
