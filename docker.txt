@@ -124,3 +124,83 @@ when I usually do port mapping then we do in local terminal not inside of contai
 command to push your img to docker hub.com
 docker push img name
 for that you need to login docker in local machine
+
+
+Docker networking is a crucial aspect of managing containers in a Docker environment. Docker provides various networking options to facilitate communication between containers, as well as between containers and the external network.
+
+By default, Docker uses a bridge network that allows containers to communicate with each other on the same host. Containers connected to the same bridge network can reach each other using their container names or IP addresses.
+
+# Example: Create a bridge network
+docker network create my_bridge_network
+
+
+Host Network: Using the host network mode allows a container to share the network namespace with the Docker host. This means the container has the same network interfaces as the host, effectively bypassing the Docker network isolation.
+
+# Example: Run a container with host network mode
+docker run --network host my_container
+
+
+                                    Volume Mounting
+
+
+Volume mounting in Docker refers to the process of attaching a data volume from the host machine or another container to a specific path within a container. This allows data to persist beyond the lifecycle of a container and facilitates data sharing between containers.
+
+Creating a Volume:
+You can create a named volume using the docker volume create command:
+# Example: Create a named volume
+docker volume create my_volume
+
+
+Mounting a Volume in a Container:
+You can mount a volume when running a container using the -v or --volume option:
+# Example: Run a container and mount a volume
+docker run -v my_volume:/path/in/container my_image
+
+
+Mounting Host Paths:
+Instead of creating a named volume, you can also mount a path from the host machine directly into the container:
+# Example: Mount a host path into the container
+docker run -v /host/path:/path/in/container my_image
+
+
+version: '3'
+services:
+  my_service:
+    image: my_image
+    volumes:
+      - my_volume:/path/in/container
+
+
+
+
+                        Docker Multistage Builds
+
+
+
+Docker multistage builds are a feature that allows you to create more efficient Docker images by using multiple build stages within a single Dockerfile. Each stage in the build produces an intermediate image, and only the final stage contains the necessary artifacts to run the application. This helps to minimize the size of the final Docker image and reduces the attack surface by excluding unnecessary build dependencies.
+
+
+# Stage 1: Build stage
+FROM node:14 as builder
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+# Stage 2: Final stage
+FROM nginx:alpine
+
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
+
+
+Multistage builds are particularly useful for languages and frameworks that require additional build tools but do not need them at runtime. They are commonly used in scenarios where a build process generates artifacts that can be included in a smaller runtime image.
